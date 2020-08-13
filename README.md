@@ -1,4 +1,10 @@
-# go-nslock
+go-nslock
+=====
+[![Go Report Card](https://goreportcard.com/badge/github.com/meowdada/go-nslock)](https://goreportcard.com/report/github.com/meowdada/go-nslock)
+[![codecov](https://codecov.io/gh/MeowDada/go-nslock/branch/master/graph/badge.svg)](https://codecov.io/gh/MeowDada/go-nslock)
+[![Build Status](https://travis-ci.org/MeowDada/go-nslock.svg?branch=master)](https://travis-ci.org/MeowDada/go-nslock)
+[![LICENSE](https://img.shields.io/github/license/meowdada/go-nslock)](https://img.shields.io/github/license/meowdada/go-nslock)
+
 go-nslock is a pure Go implementation of namespace lock.
 
 # Install
