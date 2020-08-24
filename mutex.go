@@ -12,6 +12,8 @@ import (
 func init() {
 	retry.DefaultDelay = time.Millisecond
 	retry.DefaultMaxJitter = 10 * time.Millisecond
+	retry.DefaultLastErrorOnly = true
+	retry.DefaultAttempts = ^uint(0)
 }
 
 var errRetry = fmt.Errorf("retry error")
