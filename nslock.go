@@ -10,6 +10,8 @@ import (
 
 // RWLocker is a locker interface that provides read-write lock capabilities.
 type RWLocker interface {
+	LockFn(timeout time.Duration, fn func() error) error
+	RLockFn(timeout time.Duration, fn func() error) error
 	Lock(timeout time.Duration) error
 	Unlock()
 	RLock(timeout time.Duration) error

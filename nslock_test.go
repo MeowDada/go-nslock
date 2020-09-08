@@ -65,7 +65,7 @@ func TestMap(t *testing.T) {
 				for i := 0; i < 100; i++ {
 					key := strconv.Itoa(i)
 					lock := m.New(context.Background(), key)
-					err := lock.Lock(time.Millisecond)
+					err := lock.Lock(10 * time.Millisecond)
 					if err != nil {
 						return false
 					}
@@ -139,6 +139,36 @@ func TestMap(t *testing.T) {
 				}
 				lock := m.New(context.Background(), ns)
 				return lock.Lock(time.Millisecond) == nil
+			},
+			true,
+		},
+		{
+			"valid LockFn",
+			func() bool {
+				ns := []string{"123", "456", "789"}
+				m := NewMap()
+				for i := 0; i < 100; i++ {
+					lock := m.New(context.Background(), ns...)
+					if err := lock.LockFn(time.Second, func() error { return nil }); err != nil {
+						return false
+					}
+				}
+				return true
+			},
+			true,
+		},
+		{
+			"valid RLockFn",
+			func() bool {
+				ns := []string{"123", "456", "789"}
+				m := NewMap()
+				for i := 0; i < 100; i++ {
+					lock := m.New(context.Background(), ns...)
+					if err := lock.RLockFn(time.Second, func() error { return nil }); err != nil {
+						return false
+					}
+				}
+				return true
 			},
 			true,
 		},

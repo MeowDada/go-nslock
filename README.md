@@ -9,7 +9,7 @@ go-nslock is a pure Go implementation of namespace lock.
 
 # Install
 ```bash
-go get github.com/meowdada/nslock
+go get github.com/meowdada/go-nslock
 ```
 
 # What is namespace lock ?
@@ -24,6 +24,7 @@ In brief, you have to create a `nslock.Map` instance to manages all the namespac
 
 Then, whenever you want to acquire a namespace lock, you'll need to create a lock instance and do the `Lock` or `RLock` depends on your need. And remember to reclaim these locks by `Unlock` or `RUnlock` when you're no longer need it or it might be blocked forerver.
 
+## Manually lock and unlock
 ```go
 // Creates a namespace lock manager.
 m := NewMap()
@@ -36,13 +37,36 @@ ins := m.New(ctx, namespace)
 timeout := time.Second
 
 // Peform try locking operation.
-if err := ins.GetLock(timeout); err != nil {
+if err := ins.Lock(timeout); err != nil {
     // Your logic for getting lock failed...
     return ...
 }
 defer ins.Unlock()
 ```
-Note that the timeout value of any GetLock operations should be reasonable one. If the value is too small such as microsecond, it might lead to impossible to fetch a lock because the creation time of internal data structure when fetching lock always consume more than a microsecond. The minimum value depends on your hardware, but i think millisecond would be a minimum safe choice.
+## Automatically lock and unlock
+```go
+// Creates a namespace lock manager.
+m := NewMap()
+
+// Creates a new lock instance with given namespace.
+ctx, namespace := context.Background(), "myNamespace"
+ins := m.New(ctx, namespace)
+
+// Defines timeout that denotes how long can this thread blocking wait for fetching this locker.
+timeout := time.Second
+
+callback := func() error {
+    // Your business logic to do when the namespaces are locked.
+    return ...
+}
+
+// Peform try locking operation.
+if err := ins.LockFn(timeout, callback); err != nil {
+    // Handle the error, it could be an error that failed to fetch a lock or the error value returned by the callback function.
+}
+```
+
+Note that the timeout value of any lock operations should be reasonable one. If the value is too small such as microsecond, it might lead to impossible to fetch a lock because the creation time of internal data structure when fetching lock always consume more than a microsecond. The minimum value depends on your hardware, but in generally 10 millisecond would be a minimum safe choice.
 # Contributing
 Any contributions are welcome.
 
