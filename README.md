@@ -60,7 +60,7 @@ callback := func() error {
     return ...
 }
 
-// Peform try locking operation.
+// Perform try locking operation.
 if err := ins.LockFn(timeout, callback); err != nil {
     // Handle the error, it could be an error that failed to fetch a lock or the error value returned by the callback function.
 }
